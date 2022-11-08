@@ -117,23 +117,35 @@ public class hello{
         private Student[] pStudent; //student pointer
         private int num_students; //size of array
         private int capacity; //allocated memory size 
+        private int end;
     //----------------------------------------------------------
         public StudentArray() //constructor
         {
-            this.num_students = 1;
+            this.num_students = 0;
             this.pStudent = new Student[1];
             this.capacity = 1;
+            this.end = -1;
         }
 
         public StudentArray(int size) //constructor
         {
             this.num_students = 0;
             this.capacity = size;
+            this.end = -1;
             this.pStudent = new Student[size];
         }
 
-        public int size() {return num_students;}
-        public boolean emty() {return num_students == 0;}
+        public int size() {return this.capacity;}
+        public int getNumStudent() {return this.num_students;}
+        public int endIndex() {return this.end;}
+        public boolean emty() {return this.num_students == 0;}
+        public Student at(int index)
+        {
+            if (isValidIndex(index))
+                return pStudent[index];
+            else
+                return null;
+        }
         public void insert(int index, Student element) 
         {
             if (this.num_students >= this.capacity)
@@ -143,18 +155,30 @@ public class hello{
             }
             if (this.isValidIndex(index))
             {
-                for(int j = this.num_students - 1; j >= index; j--)
+                for(int j = this.end; j >= index; j--)
                     this.pStudent[j + 1] = this.pStudent[j]; //shift up the position
                 this.pStudent[index] = element;
                 //this.pStudent[index].printStudent();
                 this.num_students++;
+                this.end++;
             }
         }
 
         public void remove(int index)
         {
-            this.pStudent[index] = null;
-            this.num_students--;
+            Student temp = new Student();
+            //swap index element for end index element
+            //temp.printStudent();
+            System.out.println(this.endIndex());
+            temp = pStudent[index];
+            //pStudent[index].printStudent();
+            pStudent[index] = pStudent[this.end];
+            pStudent[end].printStudent();
+            pStudent[this.end] = temp;
+            //pStudent[num_students].printStudent();
+            //----------------------------------------------------
+            this.num_students--; //derease students size 
+            this.end--;
         }
 
         public boolean isValidIndex(int index) //check valid index
@@ -173,7 +197,7 @@ public class hello{
         public void printAll()
         {
             System.out.println("Printing all Students");
-            for(int i = 0; i < num_students; i++)
+            for(int i = 0; i < this.num_students; i++)
                 pStudent[i].printStudent();
             System.out.println("End of Student");
         }
@@ -181,10 +205,13 @@ public class hello{
         
         public int sequential_search(String key)
         {
-            for(int index = 0; index < this.num_students; index ++)
+            for(int index = 0; index < this.end; index ++) //serching by index
             {
                 if (this.pStudent[index].getName().equals(key))
+                {
+                    System.out.println(index);
                     return index;
+                }
             }
             return -1;
         }
@@ -229,7 +256,7 @@ public class hello{
                 temp.append((char)((int)(rnd.nextInt(26)) + 97));// a ~ z
         }
         //System.out.println("gen Name : " + temp); //check the name
-        name = temp.toString();
+        name = temp.toString(); //string buffer to string
         return name;
     }
 
@@ -240,8 +267,47 @@ public class hello{
 
     public static void Inserting(StudentArray students)
     {
-        
+        Scanner scanner = new Scanner(System.in);
+        String name;
+        int age;
+        int javaScore;
+        int argoScore;
+        char YN;
+        while(true)
+        {
+            System.out.print("Input name >>"); //input name
+            name = scanner.nextLine();
+            System.out.print("Input age >>"); //input age 
+            age = scanner.nextInt();
+            System.out.print("Input java score >>"); //input java score
+            javaScore = scanner.nextInt();
+            System.out.print("Input argorithm score >>"); //input argorithm score
+            argoScore = scanner.nextInt();
+            System.out.println("-------------------------------------------------------"); //check
+            System.out.print("[Name : " + name); 
+            System.out.print(", Age : " + age);
+            System.out.print(", Java Score : " + javaScore);
+            System.out.print(", Argorithm Score : " + argoScore);
+            System.out.println("]");
+            System.out.print("Are you sure the student to add? (Y/N) >> "); //Y / N
+            YN = scanner.next().charAt(0);
+            if(YN == 'Y') //if input Y
+            {
+                Student temp = new Student(age, javaScore, argoScore, name); //make new object
+                students.insert(students.endIndex(), temp); //insert in array
+                break;
+            }
+            System.out.print("Do you want to continue adding? (Y/N) >> "); //asking continue
+            YN = scanner.next().charAt(0);
+            if(YN == 'Y') //if input y
+            {
+                continue;
+            }
+            else //or continue
+                return;
+        }
     }
+        
 
     public static void Deleting(StudentArray students)
     {
@@ -257,34 +323,148 @@ public class hello{
             temp = students.sequential_search(name); //search the student
             if(temp == -1) //if student is not exist
             {
-                System.out.println("Wrong Name "); 
-                continue;
+                System.out.println("Wrong Name ");
             }
             else // else student is exist
             {
                 System.out.print("You choose ");
                 students.printByIndex(temp);
-                System.out.print("If you want to delete this Student, input y >> ");
+                System.out.print("Are you sure to delete this Student? (Y/N)>> ");
                 YN = scanner.next().charAt(0);
-                if(YN == 'y') //if input y
+                if(YN == 'Y') //if input y
                 {
                     students.remove(temp); //remove
                     break;
                 }
-                else //or continue
-                    break;
+
             }
+
+            System.out.print("Do you want to continue deleting? (Y/N) >> "); //asking continue
+            YN = scanner.next().charAt(0);
+            if(YN == 'Y') //if input y
+            {
+                continue;
+            }
+            else //or continue
+                return;
         }
     }
 
     public static void Searching(StudentArray students)
     {
+        Scanner scanner = new Scanner(System.in);
+        String name;
+        int temp;
+        char YN;
+        while(true)
+        {
+            System.out.print("Searching the student(name) >> ");
+            name = scanner.nextLine(); //input name
+            System.out.print(name);
+            temp = students.sequential_search(name); //search the student
+            if(temp == -1) //if student is not exist
+            {
+                System.out.println("No students with that name...");
+            }
+            else // else student is exist
+            {
+                System.out.print("You choose ");
+                students.printByIndex(temp);
+            }
+            System.out.print("Do you want to continue Searching? (Y/N) >> "); //asking continue
+            YN = scanner.next().charAt(0);
+            if(YN == 'Y') //if input y
+            {
+                continue;
+            }
+            else //or continue
+                return;
+        }
+
+    }
+
+    public static boolean ModifyingCheck()
+    {
+        Scanner scanner = new Scanner(System.in);
+        char YN;
+        System.out.print("Are you sure to modify this Student? (Y/N)>> ");
+        YN = scanner.next().charAt(0);
+        if(YN == 'Y') //if input y
+        {
+            return true;
+        }
+        return false;
 
     }
 
     public static void Modifying(StudentArray students)
     {
-
+        Scanner scanner = new Scanner(System.in);
+        String name;
+        int temp;
+        int menu;
+        int age;
+        int javaScore;
+        int argoScore;
+        char YN;
+        while(true)
+        {
+            System.out.print("Choose the student you want to modifying(name) >> ");
+            name = scanner.nextLine(); //input name
+            System.out.print(name);
+            temp = students.sequential_search(name); //search the student
+            if(temp == -1) //if student is not exist
+            {
+                System.out.println("Wrong Name ");
+            }
+            else // else student is exist
+            {
+                System.out.print("You choose ");
+                students.printByIndex(temp);
+                while(true)
+                {
+                    System.out.println("Modifialbe List----------------------------");
+                    System.out.println(" 1. Name\n 2. Age\n 3. Java Score\n 4. Argorithm Score");
+                    System.out.println("Choose menu >> (1 ~ 4, -1 to exit)");
+                    menu = scanner.nextInt(); //input name
+                    switch(menu)
+                    {
+                        case 1: System.out.println("Insert new name >> ");
+                                name = scanner.nextLine(); //input name
+                                if(ModifyingCheck())
+                                    students.at(temp).setName(name);
+                                break;
+                        case 2: System.out.println("Insert new age >> ");
+                                age = scanner.nextInt(); //input name
+                                if(ModifyingCheck())
+                                    students.at(temp).setAge(age);
+                                break;
+                        case 3: System.out.println("Insert new Java Score >> ");
+                                javaScore = scanner.nextInt(); //input name
+                                if(ModifyingCheck())
+                                    students.at(temp).setJavaScore(javaScore);
+                                break;
+                        case 4: System.out.println("Insert new Aragorithm Score>> ");
+                                argoScore = scanner.nextInt(); //input name
+                                if(ModifyingCheck())
+                                    students.at(temp).setargoScore(argoScore);
+                                break;
+                        case -1: break;
+                        default : continue;
+                    }
+                    if(menu == -1)
+                        break;
+                }
+            }
+                System.out.print("Do you want to continue modifying? (Y/N) >> "); //asking continue
+                YN = scanner.next().charAt(0);
+                if(YN == 'Y') //if input y
+                {
+                    continue;
+                }
+                else //or continue
+                    return;
+        }
     }
 
     public static void GetStatistics(StudentArray students)
@@ -308,11 +488,10 @@ public class hello{
         System.out.println("Creat " + size + " Students");
         StudentArray Students = new StudentArray(size);
         System.out.println("Generate random Students...");
-        for(int i = 0; i < size; i++)
+        for(int i = 0; i < 5; i++)
         {
             Students.insert(i, genStudent());
         }
-        //여기까지는 정상작동함
 
         Students.printAll();
         /*
@@ -355,9 +534,9 @@ public class hello{
                         break;
                 case 3: Deleting(Students);
                         break;
-                case 4: Searching(Students);
+                case 4: Searching(Students); 
                         break;
-                case 5: Modifying(Students);
+                case 5: Modifying(Students); //여기까지 정상작동
                         break;
                 case 6: GetStatistics(Students);
                         break;
@@ -367,15 +546,11 @@ public class hello{
                         break;
                 case 9: System.exit(0);
                         break;
+                default: System.out.print("Wrong Menu...");
+                        break;
+
 
             }
-            
-
-
-            
-
         }while(menu!= 9);
-
-
     }
 }
