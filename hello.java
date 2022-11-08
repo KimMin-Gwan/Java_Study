@@ -11,17 +11,19 @@
  *  8. sorting by score and print
  *  - using three types class
  * Author : Kim Mingwan (21912229, Information and Communication Engineering)
- * Lastest Version 0.5
+ * Lastest Version V-0.7
  * update history------------------------------
  * V-0.2 creating Person class and Student class
  * V-0.3 creating StudentArray to Generalization
  * V-0.4 creating genStudent() function
  * V-0.5 add sequential_search function in StudentArray
- * V-0.6 
- * 
- * 
+ * V-0.6 add end index in StudentAraay class
+ * V-0.6.1 remove() functions mechanism changed
+ * V-0.7 modifying
+ * V-0.8 add getStatistics()
+ * V-0.9 quicksort argorithm add in studentArray class
+ * V-1.0 print avg in printAll()
  * issue
- * remove()사용 후 인덱스가 비어서 정상 출력이 안됨  = 해결법 : binary tree 형태 사용
  */
 
 
@@ -55,7 +57,15 @@ public class hello{
             this.name = name;
         }
         //Utils---------------------------------------------------
-        public void setAge(int age ) {this.age = age;} //age mutator
+        public void setAge(int age ) 
+        {
+            if(age < 20 || age > 30)//check the valid input
+            {
+                System.out.println("WrongInput");
+                return;
+            }
+            this.age = age;
+        } //age mutator
         public void setName(String name) {this.name = name;}  //name mutator
         public int getAge() {return this.age;} //age accessor
         public String getName(){return this.name;} //name accessor
@@ -72,7 +82,7 @@ public class hello{
     static class Student extends Person{
         private int javaScore;
         private int argoScore;
-        private int avg;
+        private double avg;
     //-----------------------------------------------------------
         public Student() //default constructor
         {
@@ -95,11 +105,30 @@ public class hello{
         }
 
         //utils-------------------------------------------------
-        public void setJavaScore(int javaScore) {this.javaScore = javaScore; setAvg();} //java score mutato
-        public void setargoScore(int argoScore) {this.argoScore = argoScore; setAvg();} //argorithm score mutator
-        public void setAvg() {this.avg = (this.javaScore + this.argoScore) / 2;}
+        public void setJavaScore(int javaScore) //java score mutato
+        {
+            if(javaScore < 0 || javaScore > 100) //check the valid input
+            {
+                System.out.println("WrongInput");
+                return;
+            }
+            this.javaScore = javaScore;
+            setAvg();
+        } 
+        public void setargoScore(int argoScore) //argorithm score mutator
+        {
+            if(argoScore < 0 || argoScore > 100)//check the valid input
+            {
+                System.out.println("WrongInput");
+                return;
+            }
+            this.argoScore = argoScore; 
+            setAvg();
+        } 
+        public void setAvg() {this.avg = (this.javaScore + this.argoScore) / 2;} //set avg
         public int getJavaScore() {return javaScore;} // javaScore accessor
         public int getArgoScore() {return argoScore;} // argorithm accessor
+        public double getAvg() {return this.avg;} //get both avg
         //function----------------------------------------------
         public void printStudent() //printing in console
         {
@@ -108,6 +137,7 @@ public class hello{
             System.out.print(", Age : " + this.getAge());
             System.out.print(", Java Score : " + this.javaScore);
             System.out.print(", Argorithm Score : " + this.argoScore);
+            System.out.print(", Avarage of both Subject : " + this.avg);
             System.out.println("]");
         }
     }
@@ -135,18 +165,20 @@ public class hello{
             this.pStudent = new Student[size];
         }
 
-        public int size() {return this.capacity;}
-        public int getNumStudent() {return this.num_students;}
-        public int endIndex() {return this.end;}
-        public boolean emty() {return this.num_students == 0;}
-        public Student at(int index)
+        public int size() {return this.capacity;} //get capacity
+        public int getNumStudent() {return this.num_students;} //get Number of Student
+        public int endIndex() {return this.end;} //get end index
+        public boolean emty() {return this.num_students == 0;} //check array is empty
+
+        public Student at(int index) //get pStudent[index]
         {
             if (isValidIndex(index))
                 return pStudent[index];
             else
                 return null;
         }
-        public void insert(int index, Student element) 
+
+        public void insert(int index, Student element) //insert element in array
         {
             if (this.num_students >= this.capacity)
             {
@@ -164,21 +196,16 @@ public class hello{
             }
         }
 
-        public void remove(int index)
+        public void remove(int index) //remove element in array
         {
             Student temp = new Student();
             //swap index element for end index element
-            //temp.printStudent();
-            System.out.println(this.endIndex());
             temp = pStudent[index];
-            //pStudent[index].printStudent();
             pStudent[index] = pStudent[this.end];
-            pStudent[end].printStudent();
             pStudent[this.end] = temp;
-            //pStudent[num_students].printStudent();
             //----------------------------------------------------
             this.num_students--; //derease students size 
-            this.end--;
+            this.end--; //derease end point
         }
 
         public boolean isValidIndex(int index) //check valid index
@@ -189,12 +216,12 @@ public class hello{
                 return true;
         }
 
-        public void printByIndex(int index)
+        public void printByIndex(int index) //print one Student
         {
             pStudent[index].printStudent();
         }
 
-        public void printAll()
+        public void printAll() //print all
         {
             System.out.println("Printing all Students");
             for(int i = 0; i < this.num_students; i++)
@@ -203,23 +230,84 @@ public class hello{
         }
 
         
-        public int sequential_search(String key)
+        public int sequential_search(String key) //search Student
         {
             for(int index = 0; index < this.end; index ++) //serching by index
             {
-                if (this.pStudent[index].getName().equals(key))
-                {
-                    System.out.println(index);
-                    return index;
-                }
+                if (this.pStudent[index].getName().equals(key)) //if find
+                    return index; //retuen index
             }
-            return -1;
+            return -1; //didn't find, return -1
+        }
+
+        public int _partition(Student[] array, int size, int left, int right, int pivotIndex, int order)
+        {
+            Student temp;
+            Student pivotValue;
+            int newPI = 0;
+
+            pivotValue = array[pivotIndex];
+            array[pivotIndex] = array[right];
+            array[right] = pivotValue; //move pivot value to right
+
+            newPI = left; //searching start index
+
+            for(int i = left; i <= (right - 1); i++)
+            {
+                if(order == 0) //0 is increase
+                {
+                    if(array[i].getAvg() <= pivotValue.getAvg())
+                    {
+                        temp = array[i];
+                        array[i] = array[newPI];
+                        array[newPI] = temp; //exchange the index
+                        newPI = newPI + 1;
+                    }
+                }
+                else //1 is decrease
+                {
+                    if(array[i].getAvg() >= pivotValue.getAvg())
+                    {
+                        temp = array[i];
+                        array[i] = array[newPI];
+                        array[newPI] = temp; //exchange the index
+                        newPI = newPI + 1;
+                    }
+                } 
+            } //end of for
+            temp = array[newPI];
+            array[newPI] = array[right];
+            array[right] = temp; //change index 
+            return newPI; //return new pivot point
+        }
+
+        public void _quick_sort(Student[] array, int size, int left, int right, int order)
+        {
+            int pI, newPI; //pivot index
+            if(left >= right)
+                return;
+            else
+                pI = (left + right) / 2; //middle point will be pivot 
+            newPI = _partition(array, size, left, right, pI, order); //get partition and get newPI
+                
+            if (left < (newPI - 1)) //left side
+                _quick_sort(array, size, left, newPI-1, order);
+            else if(right > (newPI + 1)) //right side
+                _quick_sort(array, size, newPI + 1, right, order);
+            //end of this recuresive
+        }
+
+
+
+        public void sort(int order)
+        {   
+            _quick_sort(this.pStudent, this.num_students, 0, this.end, order);
         }
     }
 
 
 
-    public static Student genStudent()
+    public static Student genStudent() //generate Studendt imformation
     {
         Student temp;
         int age;
@@ -231,7 +319,7 @@ public class hello{
         javaScore = (int)(Math.random()*100); //0 ~ 100
         argoScore = (int)(Math.random()*100); //0 ~ 100
         name = randName(); //ex) Kimmingwan
-        temp = new Student(age, javaScore, argoScore, name);
+        temp = new Student(age, javaScore, argoScore, name); //make object
         return temp;
     }
 
@@ -240,8 +328,8 @@ public class hello{
         String name;
         Random rnd = new Random(); //random buffer
         StringBuffer temp = new StringBuffer(); //temp string buffer
-        int length;
-        length = ((int)(Math.random()*1000) % 4) + 4;// 4~7
+        int length; //name lenght
+        length = ((int)(Math.random()*1000) % 4) + 4;// 4~7 length name
         for (int i = 0; i < length; i++)
         {
             //if(rnd.nextBoolean())
@@ -249,7 +337,7 @@ public class hello{
             if(i == 0)
             {
                 //System.out.println("first name gen");
-                temp.append((char)((int)(rnd.nextInt(26)) + 65));// a ~ z
+                temp.append((char)((int)(rnd.nextInt(26)) + 65));// A ~ Z
                 //System.out.println("first name : " + temp);
             }
             else
@@ -260,12 +348,13 @@ public class hello{
         return name;
     }
 
-    public static void printing(StudentArray students)
+    public static void printing(StudentArray students) //menu 1
     {
+        System.out.println("//--------------List of Student---------------------------------");
         students.printAll();
     }
 
-    public static void Inserting(StudentArray students)
+    public static void Inserting(StudentArray students) //menu 2
     {
         Scanner scanner = new Scanner(System.in);
         String name;
@@ -273,16 +362,22 @@ public class hello{
         int javaScore;
         int argoScore;
         char YN;
+        Student temp = new Student(); //make new object
+        System.out.println("//--------------Inserting---------------------------------");
         while(true)
         {
             System.out.print("Input name >>"); //input name
             name = scanner.nextLine();
+            temp.setName(name);
             System.out.print("Input age >>"); //input age 
             age = scanner.nextInt();
+            temp.setAge(age);
             System.out.print("Input java score >>"); //input java score
             javaScore = scanner.nextInt();
+            temp.setJavaScore(javaScore);
             System.out.print("Input argorithm score >>"); //input argorithm score
             argoScore = scanner.nextInt();
+            temp.setargoScore(argoScore);
             System.out.println("-------------------------------------------------------"); //check
             System.out.print("[Name : " + name); 
             System.out.print(", Age : " + age);
@@ -293,7 +388,6 @@ public class hello{
             YN = scanner.next().charAt(0);
             if(YN == 'Y') //if input Y
             {
-                Student temp = new Student(age, javaScore, argoScore, name); //make new object
                 students.insert(students.endIndex(), temp); //insert in array
                 break;
             }
@@ -309,7 +403,7 @@ public class hello{
     }
         
 
-    public static void Deleting(StudentArray students)
+    public static void Deleting(StudentArray students) //menu 3
     {
         Scanner scanner = new Scanner(System.in);
         String name;
@@ -350,12 +444,13 @@ public class hello{
         }
     }
 
-    public static void Searching(StudentArray students)
+    public static void Searching(StudentArray students) //menu 4
     {
         Scanner scanner = new Scanner(System.in);
         String name;
         int temp;
         char YN;
+        System.out.println("//--------------Searching---------------------------------");
         while(true)
         {
             System.out.print("Searching the student(name) >> ");
@@ -383,11 +478,11 @@ public class hello{
 
     }
 
-    public static boolean ModifyingCheck()
+    public static boolean ModifyingCheck() //to shorten the length of code
     {
         Scanner scanner = new Scanner(System.in);
         char YN;
-        System.out.print("Are you sure to modify this Student? (Y/N)>> ");
+        System.out.print("Are you sure to modify this Student? (Y/N)>> "); //check
         YN = scanner.next().charAt(0);
         if(YN == 'Y') //if input y
         {
@@ -402,11 +497,13 @@ public class hello{
         Scanner scanner = new Scanner(System.in);
         String name;
         int temp;
-        int menu;
+        int menu = 0;
         int age;
         int javaScore;
         int argoScore;
-        char YN;
+        char YN; //Y or N
+
+        System.out.println("//--------------Modifying---------------------------------");
         while(true)
         {
             System.out.print("Choose the student you want to modifying(name) >> ");
@@ -425,37 +522,42 @@ public class hello{
                 {
                     System.out.println("Modifialbe List----------------------------");
                     System.out.println(" 1. Name\n 2. Age\n 3. Java Score\n 4. Argorithm Score");
-                    System.out.println("Choose menu >> (1 ~ 4, -1 to exit)");
+                    System.out.print("Choose menu >> (1 ~ 4, -1 to exit)");
                     menu = scanner.nextInt(); //input name
                     switch(menu)
                     {
-                        case 1: System.out.println("Insert new name >> ");
+                        case 1: System.out.print("Insert new name >> ");
                                 name = scanner.nextLine(); //input name
                                 if(ModifyingCheck())
                                     students.at(temp).setName(name);
                                 break;
-                        case 2: System.out.println("Insert new age >> ");
-                                age = scanner.nextInt(); //input name
+                        case 2: System.out.print("Insert new age >> ");
+                                age = scanner.nextInt(); //input age
                                 if(ModifyingCheck())
                                     students.at(temp).setAge(age);
                                 break;
-                        case 3: System.out.println("Insert new Java Score >> ");
-                                javaScore = scanner.nextInt(); //input name
+                        case 3: System.out.print("Insert new Java Score >> ");
+                                javaScore = scanner.nextInt(); //input java score
                                 if(ModifyingCheck())
                                     students.at(temp).setJavaScore(javaScore);
                                 break;
-                        case 4: System.out.println("Insert new Aragorithm Score>> ");
-                                argoScore = scanner.nextInt(); //input name
+                        case 4: System.out.print("Insert new Aragorithm Score>> ");
+                                argoScore = scanner.nextInt(); //input argorithm score
                                 if(ModifyingCheck())
                                     students.at(temp).setargoScore(argoScore);
                                 break;
-                        case -1: break;
+                        case -1: break; //break
                         default : continue;
-                    }
-                    if(menu == -1)
+                    } //end of switch
+                    if(menu == -1) //break
                         break;
-                }
-            }
+                } //end of while
+            }//end of if
+
+            if(menu == -1)
+                return;
+            else
+            {
                 System.out.print("Do you want to continue modifying? (Y/N) >> "); //asking continue
                 YN = scanner.next().charAt(0);
                 if(YN == 'Y') //if input y
@@ -464,22 +566,87 @@ public class hello{
                 }
                 else //or continue
                     return;
-        }
+            }
+        } //end of while
     }
 
     public static void GetStatistics(StudentArray students)
     {
+        int size = students.num_students;
+        int javaTotal = 0;
+        int argoTotal = 0;
+        double bothTotal = 0;
+        double javaAvg = 0;
+        double argoAvg = 0;
+        double totalAvg = 0;
+        for(int i = 0; i < students.endIndex(); i++) //make sum 
+        {
+            javaTotal += students.at(i).getJavaScore(); //java score
+            argoTotal += students.at(i).getArgoScore(); //argorithm score sum
+            bothTotal += students.at(i).getAvg(); //avg sum
+        }
+        javaAvg = javaTotal / size; //get avg
+        argoAvg = argoTotal / size;
+        totalAvg = bothTotal / size;
 
+        System.out.println("//--------------Avarage---------------------------------");
+        System.out.println("The Avrage Score of java is : " + javaAvg);
+        System.out.println("The Avarage Score of argorithm : " + argoAvg);
+        System.out.println("The Avarage Socre of Individual's Avarage : " + totalAvg);
     }
     
     public static void GetTotal(StudentArray students)
     {
+        int size = students.num_students;
+        int javaTotal = 0;
+        int argoTotal = 0;
+        double bothTotal = 0;
+        for(int i = 0; i < students.endIndex(); i++) //make sum
+        {
+            javaTotal += students.at(i).getJavaScore(); //java score
+            argoTotal += students.at(i).getArgoScore(); //argorithm score sum
+            bothTotal += students.at(i).getAvg(); //avg sum
+        }
 
+        System.out.println("//--------------total---------------------------------");
+        System.out.println("The Total score of java is : " + javaTotal);
+        System.out.println("The Total score of argorithm : " + argoTotal);
+        System.out.println("The Total score Individual's Avarage : " + bothTotal);
     }
 
     public static void PrintWithSort(StudentArray students)
     {
 
+    
+        Scanner menuInput = new Scanner(System.in);
+        int menu;
+
+        while(true)
+        {
+            System.out.println("//--------------Sorted List---------------------------------");
+            System.out.println("Chose sorting order");
+            System.out.println("1. increase");
+            System.out.println("2.decrease");
+            System.out.println("3. return to menu");
+            System.out.print(" >> ");
+            menu = menuInput.nextInt();
+            switch(menu)
+            {
+                case 1: students.sort(0);
+                        break;
+                case 2: students.sort(1);
+                        break;
+                case 3: break;
+                default : continue;
+            }
+            if (menu == 3)
+                break;
+            else
+            {
+                students.printAll();
+                break;
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -493,7 +660,7 @@ public class hello{
             Students.insert(i, genStudent());
         }
 
-        Students.printAll();
+        //Students.printAll();
         /*
          * // ** Managing Java programing Student ** //
          * ------------------Menu----------------------
@@ -521,7 +688,7 @@ public class hello{
             System.out.println("5. Modify Student");
             System.out.println("6. Get Statistics");
             System.out.println("7. Get Total Score");
-            System.out.println("8. Print Score-sequentail");
+            System.out.println("8. Sorting List");
             System.out.println("9. Exit");
             System.out.print("Choose menu >> ");
             menu = menuInput.nextInt();
@@ -548,8 +715,6 @@ public class hello{
                         break;
                 default: System.out.print("Wrong Menu...");
                         break;
-
-
             }
         }while(menu!= 9);
     }
