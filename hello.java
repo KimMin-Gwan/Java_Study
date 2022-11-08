@@ -703,7 +703,7 @@ public class hello{
                         break;
                 case 4: Searching(Students); 
                         break;
-                case 5: Modifying(Students); //여기까지 정상작동
+                case 5: Modifying(Students);
                         break;
                 case 6: GetStatistics(Students);
                         break;
