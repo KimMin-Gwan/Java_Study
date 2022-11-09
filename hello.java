@@ -275,9 +275,9 @@ public class hello{
                     }
                 } 
             } //end of for
-            temp = array[newPI];
-            array[newPI] = array[right];
-            array[right] = temp; //change index 
+            pivotValue = array[right];
+            array[right] = array[newPI];
+            array[newPI] = pivotValue; //change index 
             return newPI; //return new pivot point
         }
 
@@ -291,7 +291,7 @@ public class hello{
             newPI = _partition(array, size, left, right, pI, order); //get partition and get newPI
                 
             if (left < (newPI - 1)) //left side
-                _quick_sort(array, size, left, newPI-1, order);
+                _quick_sort(array, size, left, newPI - 1, order);
             else if(right > (newPI + 1)) //right side
                 _quick_sort(array, size, newPI + 1, right, order);
             //end of this recuresive
@@ -367,7 +367,7 @@ public class hello{
         while(true)
         {
             System.out.print("Input name >>"); //input name
-            name = scanner.nextLine();
+            name = scanner.next();
             temp.setName(name);
             System.out.print("Input age >>"); //input age 
             age = scanner.nextInt();
@@ -412,7 +412,7 @@ public class hello{
         while(true)
         {
             System.out.print("Choose the student you want to delet(name) >> ");
-            name = scanner.nextLine(); //input name
+            name = scanner.next(); //input name
             System.out.print(name);
             temp = students.sequential_search(name); //search the student
             if(temp == -1) //if student is not exist
@@ -454,7 +454,7 @@ public class hello{
         while(true)
         {
             System.out.print("Searching the student(name) >> ");
-            name = scanner.nextLine(); //input name
+            name = scanner.next(); //input name
             System.out.print(name);
             temp = students.sequential_search(name); //search the student
             if(temp == -1) //if student is not exist
@@ -507,8 +507,8 @@ public class hello{
         while(true)
         {
             System.out.print("Choose the student you want to modifying(name) >> ");
-            name = scanner.nextLine(); //input name
-            System.out.print(name);
+            name = scanner.next(); //input name
+            System.out.println(name);
             temp = students.sequential_search(name); //search the student
             if(temp == -1) //if student is not exist
             {
@@ -527,7 +527,7 @@ public class hello{
                     switch(menu)
                     {
                         case 1: System.out.print("Insert new name >> ");
-                                name = scanner.nextLine(); //input name
+                                name = scanner.next(); //input name
                                 if(ModifyingCheck())
                                     students.at(temp).setName(name);
                                 break;
@@ -650,12 +650,12 @@ public class hello{
     }
 
     public static void main(String[] args) {
-        int size = 20;
+        int size = 40;
         System.out.println("hello World");
         System.out.println("Creat " + size + " Students");
         StudentArray Students = new StudentArray(size);
         System.out.println("Generate random Students...");
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 35; i++)
         {
             Students.insert(i, genStudent());
         }
@@ -703,7 +703,7 @@ public class hello{
                         break;
                 case 4: Searching(Students); 
                         break;
-                case 5: Modifying(Students); //여기까지 정상작동
+                case 5: Modifying(Students); 
                         break;
                 case 6: GetStatistics(Students);
                         break;
