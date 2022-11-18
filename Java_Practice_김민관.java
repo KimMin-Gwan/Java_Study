@@ -40,12 +40,12 @@ public class Java_Practice_김민관{
         public Person() //default constructor
         { 
             this.age = 0;
-            this.name = "Ananymous";
+            this.name = "Anonymous";
         }
         public Person(int age) //constructor 
         { 
             this.age = age;
-            this.name = "Ananymous";
+            this.name = "Anonymous";
         }
         public Person (String name) //constructor
         {
@@ -73,7 +73,7 @@ public class Java_Practice_김민관{
         //funtions------------------------------------------------
         public void printPerson()
         {
-            /*[Name : Ananymous, Age : 0] */
+            /*[Name : Anonymous, Age : 0] */
             System.out.print("[Name : " + this.name);
             System.out.print(", Age : " + this.age);
             System.out.println("]");
