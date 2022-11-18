@@ -1,5 +1,5 @@
 /**
- * Project Name : Java_Practice_1
+ * Project Name : Java_Practice_김민관
  * Detail 
  *  1. creat random student
  *  2. insert student
@@ -11,7 +11,7 @@
  *  8. sorting by score and print
  *  - using three types class
  * Author : Kim Mingwan (21912229, Information and Communication Engineering)
- * Lastest Version V-0.7
+ * Lastest Version V-1.1 (2022/11/11)
  * update history------------------------------
  * V-0.2 creating Person class and Student class
  * V-0.3 creating StudentArray to Generalization
@@ -23,6 +23,7 @@
  * V-0.8 add getStatistics()
  * V-0.9 quicksort argorithm add in studentArray class
  * V-1.0 print avg in printAll()
+ * V-1.1 All bug fixed
  * issue
  */
 
@@ -31,7 +32,7 @@ import java.util.Scanner;
 import java.lang.runtime.SwitchBootstraps;
 import java.util.Random;
 
-public class hello{
+public class Java_Practice_김민관{
     static class Person{
         private int age;
         private String name;
@@ -284,7 +285,7 @@ public class hello{
         public void _quick_sort(Student[] array, int size, int left, int right, int order)
         {
             int pI, newPI; //pivot index
-            if(left >= right)
+            if(left > right)
                 return;
             else
                 pI = (left + right) / 2; //middle point will be pivot 
@@ -292,7 +293,7 @@ public class hello{
                 
             if (left < (newPI - 1)) //left side
                 _quick_sort(array, size, left, newPI - 1, order);
-            else if(right > (newPI + 1)) //right side
+            if(right > (newPI + 1)) //right side
                 _quick_sort(array, size, newPI + 1, right, order);
             //end of this recuresive
         }
@@ -626,7 +627,7 @@ public class hello{
             System.out.println("//--------------Sorted List---------------------------------");
             System.out.println("Chose sorting order");
             System.out.println("1. increase");
-            System.out.println("2.decrease");
+            System.out.println("2. decrease");
             System.out.println("3. return to menu");
             System.out.print(" >> ");
             menu = menuInput.nextInt();
@@ -703,7 +704,7 @@ public class hello{
                         break;
                 case 4: Searching(Students); 
                         break;
-                case 5: Modifying(Students);
+                case 5: Modifying(Students); 
                         break;
                 case 6: GetStatistics(Students);
                         break;
