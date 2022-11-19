@@ -169,7 +169,7 @@ public class Java_Practice_김민관{
         public int size() {return this.capacity;} //get capacity
         public int getNumStudent() {return this.num_students;} //get Number of Student
         public int endIndex() {return this.end;} //get end index
-        public boolean emty() {return this.num_students == 0;} //check array is empty
+        public boolean empty() {return this.num_students == 0;} //check array is empty
 
         public Student at(int index) //get pStudent[index]
         {
@@ -542,7 +542,7 @@ public class Java_Practice_김민관{
                                 if(ModifyingCheck())
                                     students.at(temp).setJavaScore(javaScore);
                                 break;
-                        case 4: System.out.print("Insert new Aragorithm Score>> ");
+                        case 4: System.out.print("Insert new Argorithm Score>> ");
                                 argoScore = scanner.nextInt(); //input argorithm score
                                 if(ModifyingCheck())
                                     students.at(temp).setargoScore(argoScore);
@@ -573,7 +573,7 @@ public class Java_Practice_김민관{
 
     public static void GetStatistics(StudentArray students)
     {
-        int size = students.num_students;
+        int size = students.getNumStudent();
         int javaTotal = 0;
         int argoTotal = 0;
         double bothTotal = 0;
@@ -598,7 +598,7 @@ public class Java_Practice_김민관{
     
     public static void GetTotal(StudentArray students)
     {
-        int size = students.num_students;
+        //int size = students.getNumStudent();
         int javaTotal = 0;
         int argoTotal = 0;
         double bothTotal = 0;
