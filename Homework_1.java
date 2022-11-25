@@ -2,9 +2,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 
-public class aba extends JFrame {
+public class Homework_1 extends JFrame {
 	private JLabel label = new JLabel("Love Java");
-	public aba() {
+	public Homework_1() {
 		setTitle("마우스 이벤트 리스터");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container c = getContentPane();
@@ -40,7 +40,7 @@ public class aba extends JFrame {
 		} 
 	}
 	public static void main(String [] args) {
-		new aba();
+		new Homework_1();
 	}
 }
 

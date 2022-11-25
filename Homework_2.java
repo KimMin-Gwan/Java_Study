@@ -2,8 +2,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class abc extends JFrame {
-    public abc() {
+public class Homework_2 extends JFrame {
+    public Homework_2() {
         super("드래깅동안YELLOW로 변경");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Container c = getContentPane();
@@ -29,7 +29,7 @@ public class abc extends JFrame {
     }
 
     static public void main(String [] args) {
-        new abc();
+        new Homework_2();
     }
 }
 
